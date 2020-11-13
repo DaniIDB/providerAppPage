@@ -1,0 +1,7 @@
+<div class="container">
+    <h2>Flights for today</h2>
+    <div class="panel panel-default" *ngFor="let item of FlightArray">
+      <div class="panel-heading"><Button>{{item.departure}} => {{item.arrival}}</Button></div>
+      <div class="panel-body">Panel Content</div>
+    </div>
+</div>

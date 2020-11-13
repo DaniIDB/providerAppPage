@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthenticationService } from "../autentification/authentication.service";
 
 @Component({
   selector: 'app-provider-login',
@@ -14,26 +15,29 @@ export class ProviderLoginComponent implements OnInit {
 
   public error;
 
-  constructor(public http: HttpClient, private router: Router) { }
+  constructor(public http: HttpClient, private router: Router, private authentication: AuthenticationService) { 
+    if (this.authentication.currentUserValue) { 
+      this.router.navigate(['']);
+    }
+  }
 
   ngOnInit(): void {
-    this.user=new FormGroup({
-      userName: new FormControl('',[Validators.required]),
+    this.user = new FormGroup({
+      userName: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
     })
   }
 
-  public onSubmit(){
-    this.http.get("http://localhost:8081/getUserValues?UserName="+this.user.value.userName+"&Password="+this.user.value.password, {responseType: 'text'}).subscribe(error=>{
-      if(error==='Error'){
-        this.error=error;
-      } else {
-        this.navigate('provider-page');
+  public onSubmit() {
+    console.log(this.authentication.login(this.user.value.userName, this.user.value.password).subscribe(
+      data => {
+        const currentUser = this.authentication.currentUserValue;
+        if (currentUser) {
+          this.router.navigate([data.returnUrl]);
+        } else {
+          this.error="Error";
+        }
       }
-    });
-  }
-
-  navigate(url: string) {
-    this.router.navigateByUrl(url);
+    ));
   }
 }

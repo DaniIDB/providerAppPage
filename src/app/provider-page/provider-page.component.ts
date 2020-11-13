@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import {Router} from '@angular/router';
+import { AuthenticationService } from "../autentification/authentication.service";
 
 @Component({
   selector: 'app-provider-page',
@@ -20,15 +21,13 @@ export class ProviderPageComponent implements OnInit {
 
   public destinationId;
 
-  constructor(private http : HttpClient, private router:Router) {
+  constructor(private http : HttpClient, private router:Router, private authentication: AuthenticationService) {
    }
 
   ngOnInit(): void {
-    
   }
 
-  public login(){
-    this.router.navigateByUrl("login");
+  public logOut(){
+    this.authentication.logout();
   }
-
 }

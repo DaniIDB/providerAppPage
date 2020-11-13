@@ -5,17 +5,28 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthGuard } from './autentification/auth.guard';
 import { ProviderPageComponent } from './provider-page/provider-page.component';
+import { HomeComponent } from './home/home.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    component: ProviderPageComponent,
+    children: [
+      { path: 'home', component: HomeComponent }
+    ]
+  },
   {
     path: 'login',
     component: ProviderLoginComponent,
   },
 
   {
-    path: 'provider-page',
-    component: ProviderPageComponent,
+    path: '**',
+    component: NotFoundComponent,
   },
 ];
 
@@ -25,6 +36,7 @@ const routes: Routes = [
   declarations: [
     ProviderLoginComponent,
     ProviderPageComponent,
+    HomeComponent,
   ],
 })
 export class AppRoutingModule { }
