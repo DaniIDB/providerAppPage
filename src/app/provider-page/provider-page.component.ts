@@ -21,7 +21,8 @@ export class ProviderPageComponent implements OnInit {
 
   public destinationId;
 
-  constructor(private http : HttpClient, private router:Router, private authentication: AuthenticationService) {
+  constructor(private http : HttpClient, public router:Router, private authentication: AuthenticationService) {
+    console.log(this.router.url);
    }
 
   ngOnInit(): void {

@@ -1,11 +1,11 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" style="cursor: pointer;">WebSiteName</a>
+        <a class="navbar-brand" style="cursor: pointer;">Flights Margon</a>
       </div>
       <ul class="nav navbar-nav">
-        <li><a style="cursor: pointer;">Home</a></li>
-        <li><a style="cursor: pointer;">Page 1</a></li>
+        <li [ngClass]="{'active': router.url === '/'}"><a routerLink='/'>Home</a></li>
+        <li [ngClass]="{'active': router.url === '/flights'}"><a routerLink='/flights'>Flights</a></li>
         <li><a style="cursor: pointer;">Page 2</a></li>
         <li><a style="cursor: pointer;">Page 3</a></li>
       </ul>

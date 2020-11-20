@@ -9,6 +9,8 @@ import { AuthGuard } from './autentification/auth.guard';
 import { ProviderPageComponent } from './provider-page/provider-page.component';
 import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { FlightsComponent } from './flights/flights.component';
+import { DateTimePickerModule } from "@syncfusion/ej2-angular-calendars";
 
 const routes: Routes = [
   {
@@ -16,7 +18,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: ProviderPageComponent,
     children: [
-      { path: 'home', component: HomeComponent }
+      { path: '', component: HomeComponent },
+      { path: 'flights', component: FlightsComponent}
     ]
   },
   {
@@ -31,12 +34,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes), CommonModule, BrowserModule, HttpClientModule, ReactiveFormsModule],
+  imports: [RouterModule.forRoot(routes), CommonModule, BrowserModule, HttpClientModule, ReactiveFormsModule, DateTimePickerModule],
   exports: [RouterModule],
   declarations: [
     ProviderLoginComponent,
     ProviderPageComponent,
     HomeComponent,
+    FlightsComponent,
   ],
 })
 export class AppRoutingModule { }
