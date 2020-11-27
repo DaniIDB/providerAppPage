@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { FlightsComponent } from './flights/flights.component';
 import { DateTimePickerModule } from "@syncfusion/ej2-angular-calendars";
+import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 
 const routes: Routes = [
   {
@@ -34,7 +35,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes), CommonModule, BrowserModule, HttpClientModule, ReactiveFormsModule, DateTimePickerModule],
+  imports: [RouterModule.forRoot(routes), CommonModule, BrowserModule, HttpClientModule, ReactiveFormsModule, DateTimePickerModule, DatePickerModule],
   exports: [RouterModule],
   declarations: [
     ProviderLoginComponent,

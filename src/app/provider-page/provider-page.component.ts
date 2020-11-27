@@ -21,8 +21,11 @@ export class ProviderPageComponent implements OnInit {
 
   public destinationId;
 
+  public user : String;
+
   constructor(private http : HttpClient, public router:Router, private authentication: AuthenticationService) {
     console.log(this.router.url);
+    this.user = JSON.parse(localStorage.getItem('currentUser')).userName;
    }
 
   ngOnInit(): void {

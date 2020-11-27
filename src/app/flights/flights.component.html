@@ -2,60 +2,73 @@
     <div class="row">
         <div class="col-sm-3">
             <h2>Filter Flights</h2>
-            <form (ngSubmit)="onSubmit()" [formGroup]="filterFlight">
+            <form (ngSubmit)="filter()" [formGroup]="filterFlight">
                 <div class="form-group">
                     <label>Departure</label>
-                    <input class="form-control" type="text" placeholder="Filter for departure"
-                        formControlName="departure">
+                    <select class="form-control" formControlName="departure">
+                        <option value="">-- choose an option --</option>
+                        <option *ngFor="let item of destinationArray">{{item.destination}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Arrival</label>
-                    <input class="form-control" type="text" placeholder="Filter for arrival" formControlName="arrival">
+                    <select class="form-control" formControlName="arrival">
+                        <option value="">-- choose an option --</option>
+                        <option *ngFor="let item of destinationArray">{{item.destination}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Date</label>
-                    <ejs-datetimepicker formControlName="datetimepicker" placeholder='Enter date'></ejs-datetimepicker>
+                    <ejs-datepicker formControlName="datetimepicker" placeholder='Enter date'></ejs-datepicker>
                 </div>
                 <button type="submit" class="btn btn-primary">
                     <span class="glyphicon glyphicon-search"></span> Search
                 </button>
             </form>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-6"
+            style="background-color: brown; background-repeat: no-repeat; background-size: 300px 100px;">
 
         </div>
         <div class="col-sm-3">
             <h2>Create New Flight</h2>
-            <form (ngSubmit)="onSubmit()" [formGroup]="filterFlight">
+            <form (ngSubmit)="create()" [formGroup]="createFlight">
                 <div class="form-group">
                     <label>Departure</label>
-                    <input class="form-control" type="text" placeholder="Filter for departure"
-                        formControlName="departure">
+                    <select class="form-control" formControlName="departure">
+                        <option value="">-- choose an option --</option>
+                        <option *ngFor="let item of destinationArray">{{item.destination}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Arrival</label>
-                    <input class="form-control" type="text" placeholder="Filter for arrival" formControlName="arrival">
+                    <select class="form-control" formControlName="arrival">
+                        <option value="">-- choose an option --</option>
+                        <option *ngFor="let item of destinationArray">{{item.destination}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Date</label>
-                    <ejs-datetimepicker [value]='dateValue' placeholder='Enter date'></ejs-datetimepicker>
+                    <ejs-datetimepicker formControlName="datetimepicker" placeholder='Enter date'></ejs-datetimepicker>
                 </div>
-                <button type="button" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary">
                     <span class="glyphicon glyphicon-plus"></span> new
                 </button>
             </form>
+            <div *ngIf="createError!=null" class="alert alert-danger">
+                <strong>Danger! </strong>{{createError}}
+            </div>
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container-fluid">
     <h1>All Flights</h1>
-    <table class="table table-hover">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Departure</th>
                 <th>Arrival</th>
                 <th>Date</th>
-                <th>Time</th>
                 <th>Options</th>
             </tr>
         </thead>
@@ -63,13 +76,77 @@
             <tr *ngFor="let item of flightArray">
                 <td>{{item.departure}}</td>
                 <td>{{item.arrival}}</td>
-                <td>{{item.date}}</td>
-                <td>{{item.time}}</td>
+                <td>{{item.date | date :'short'}}</td>
                 <td>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-primary">Edit</button>
-                        <button type="button" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target="#editModal">Edit</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                            data-target="#deleteModal">Delete</button>
                     </div>
+                    <div class="modal fade" id="editModal" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Edit flight</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form [formGroup]="editFlight">
+                                        <div class="form-group">
+                                            <label>Departure</label>
+                                            <select class="form-control" formControlName="departure">
+                                                <option value="">-- choose an option --</option>
+                                                <option *ngFor="let destination of destinationArray">
+                                                    {{destination.destination}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Arrival</label>
+                                            <select class="form-control" formControlName="arrival">
+                                                <option value="">-- choose an option --</option>
+                                                <option *ngFor="let destination of destinationArray">
+                                                    {{destination.destination}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Date</label>
+                                            <ejs-datetimepicker formControlName="datetimepicker"
+                                                placeholder='Enter date'></ejs-datetimepicker>
+                                        </div>
+                                    </form>
+                                    <div *ngIf="editError!=null" class="alert alert-danger">
+                                        <strong>Danger! </strong>{{createError}}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button (click)="edit(item)" class="btn btn-default">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="deleteModal" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Delete flight</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger">
+                                    <p>Are you sure to <strong>Delete</strong> this flight?</p>
+                                </div>
+                                <div class="alert alert-info">
+                                    <p><strong>Flight data: </strong>{{item.departure}}=>{{item.arrival}}<br>
+                                    <strong>Date: </strong>{{item.date | date :'short'}}</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button (click)="delete(item)" class="btn btn-default">Delete</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                 </td>
             </tr>
         </tbody>
