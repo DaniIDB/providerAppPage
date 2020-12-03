@@ -23,13 +23,30 @@ export class FlightsComponent implements OnInit {
 
   public editError;
 
+  public changeFlight;
+
+  public destination;
+
+  public errorDestination;
+
+  public deleteDestinationArray;
+
+  public errorDeleteDestination;
+
+  public selectedFlight = {
+    "id": 1,
+    "departure": "",
+    "arrival": "Spain",
+    "date": 34,
+    "user": ""
+  };
+
   constructor(private http: HttpClient) {
-    this.http.get("http://localhost:8081/getFlightsForToday?").subscribe(data => {
+    this.http.get("http://localhost:8081/getFlights?").subscribe(data => {
       this.flightArray = data;
     });
     this.http.get("http://localhost:8081/getDestination?").subscribe(data => {
       this.destinationArray = data;
-      console.log(this.destinationArray);
     });
   }
 
@@ -51,6 +68,14 @@ export class FlightsComponent implements OnInit {
       arrival: new FormControl(''),
       datetimepicker: new FormControl('')
     })
+
+    this.destination = new FormGroup({
+      name: new FormControl('')
+    })
+
+    this.deleteDestinationArray = new FormGroup({
+      name: new FormControl('')
+    })
   }
 
   public onSubmit() {
@@ -63,15 +88,18 @@ export class FlightsComponent implements OnInit {
     var departure = this.createFlight.value.departure;
     var arrival = this.createFlight.value.arrival;
     var user = JSON.parse(localStorage.getItem('currentUser'));
-    console.log(this.createFlight.value.datetimepicker);
     if (this.createFlight.value.datetimepicker != null && this.createFlight.value.datetimepicker.length != 0) {
       var date = new Date(this.createFlight.value.datetimepicker);
       this.http.get("http://localhost:8081/createnewflights?departure=" + departure + "&arrival=" + arrival + "&date=" + date.toISOString() + "&user=" + user.userName).subscribe(data => {
         this.filter();
         this.createError = null;
+
+        var x = document.getElementById("snackbarCreated");
+        x.className = "show";
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
       },
         (error) => {
-          this.createError = error;
+          this.createError = error.error.error;
         });
     } else {
       console.log("asdasasda");
@@ -96,29 +124,77 @@ export class FlightsComponent implements OnInit {
     }
   }
 
-  public edit(flight) {
+  public edit() {
     var departure = this.editFlight.value.departure;
     var arrival = this.editFlight.value.arrival;
     var user = JSON.parse(localStorage.getItem('currentUser'));
-    var id = flight.id;
+    var id = this.changeFlight.id;
     if (this.editFlight.value.datetimepicker != null && this.editFlight.value.datetimepicker.length != 0) {
       var date = new Date(this.editFlight.value.datetimepicker);
       this.http.get("http://localhost:8081/editflight?departure=" + departure + "&arrival=" + arrival + "&date=" + date.toISOString() + "&user=" + user.userName + "&id=" + id).subscribe(data => {
-        flight.departure = departure;
-        flight.arrival = arrival;
-        flight.date = this.editFlight.value.datetimepicker;
-        flight.user = user;
+        this.changeFlight.departure = departure;
+        this.changeFlight.arrival = arrival;
+        this.changeFlight.date = this.editFlight.value.datetimepicker;
+        this.changeFlight.user = user;
+        this.editError = null;
+
+        var x = document.getElementById("snackbarEdited");
+        x.className = "show";
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
       },
         (error) => {
-          this.editError = error;
+          console.log(error);
+          this.editError = error.error.error;
         });
     } else {
       this.editError = "Invalid date";
     }
+  }
+
+  public setFlight(flight) {
+    this.selectedFlight.departure = flight.departure;
+    this.selectedFlight.arrival = flight.arrival;
+    this.selectedFlight.date = flight.date;
+
+    this.changeFlight = flight;
+  }
+
+  public delete() {
+    this.http.get("http://localhost:8081/deleteflight?id=" + this.changeFlight.id).subscribe(data => {
+      this.filter();
+      var x = document.getElementById("snackbarDeleted");
+      x.className = "show";
+      setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    });
 
   }
 
-  public delete(flight) {
+  public newDestination() {
+    this.http.get("http://localhost:8081/newdestination?name=" + this.destination.value.name).subscribe(data => {
+      this.destinationArray.push(data);
+      this.errorDestination = null;
+      var x = document.getElementById("snackbarCreated");
+      x.className = "show";
+      setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    },
+      (error) => {
+        this.errorDestination = error.error.error;
+      });
+  }
 
+  public deleteDestination() {
+
+    this.http.get("http://localhost:8081/deletedestination?name=" + this.deleteDestinationArray.value.name.destination + "&id=" + this.deleteDestinationArray.value.name.id).subscribe(data => {
+      this.http.get("http://localhost:8081/getDestination?").subscribe(data => {
+        this.destinationArray = data;
+        this.errorDeleteDestination = null;
+        var x = document.getElementById("snackbarDeleted");
+        x.className = "show";
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+      });
+    },
+      (error) => {
+        this.errorDeleteDestination = error.error.error;
+      });
   }
 }

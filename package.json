@@ -21,7 +21,7 @@
     "@angular/router": "~10.2.0",
     "@popperjs/core": "^2.5.4",
     "@syncfusion/ej2-angular-calendars": "^18.3.48",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "jquery": "^3.5.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
