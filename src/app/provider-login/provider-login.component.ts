@@ -22,6 +22,7 @@ export class ProviderLoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(localStorage.getItem('returnUrl'));
     this.user = new FormGroup({
       userName: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
